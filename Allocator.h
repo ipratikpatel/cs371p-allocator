@@ -109,7 +109,7 @@ class Allocator {
         Allocator () {
             // <your code>
             int *p = reinterpret_cast<int*>(&a[0]);
-            int num_free_bytes = N - 8;
+            int num_free_bytes = N - 8;// this is where we did it
             *p = num_free_bytes;
             p = (int * ) ( a + N - 4 );
             assert(p == (int *) (a + 4 + num_free_bytes)); 
@@ -195,6 +195,9 @@ class Allocator {
                 }                
                 
             }
+
+            std::cout << "No free space" << std::endl;
+            exit(0);
 
             assert(valid());
             return 0;}                   // replace!

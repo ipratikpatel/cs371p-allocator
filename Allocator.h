@@ -58,7 +58,7 @@ class Allocator {
         // ----
 
         char a[N];
-
+        
         // -----
         // valid
         // -----
@@ -70,6 +70,30 @@ class Allocator {
          */
         bool valid () const {
             // <your code>
+            const int *p = reinterpret_cast<const int*>(&a[0]);
+            int sentinal_a = 0;
+            int sentinal_b = 0;
+            const char *temp_a = a;
+
+            // Go through the array and check the sentinals untill we reach the end of the char a[N];
+            while(temp_a < (a + N))
+            {   
+                sentinal_a = *p;
+
+                if (sentinal_a < 0)
+                    p = (int *) ( temp_a + ((-1 * sentinal_a) + 4) );
+                else
+                    p = (int *) ( temp_a +(sentinal_a + 4) );
+
+                sentinal_b = *p;
+
+                if (sentinal_a != sentinal_b)
+                    return false;
+
+                p += 1;
+                temp_a = (char *) p;
+            }
+
             return true;}
 
     public:
@@ -84,6 +108,12 @@ class Allocator {
          */
         Allocator () {
             // <your code>
+            int *p = reinterpret_cast<int*>(&a[0]);
+            int num_free_bytes = N - 8;
+            *p = num_free_bytes;
+            p = (int * ) ( a + N - 4 );
+            assert(p == (int *) (a + 4 + num_free_bytes)); 
+            *p = num_free_bytes;
             assert(valid());}
 
         // Default copy, destructor, and copy assignment
@@ -103,10 +133,71 @@ class Allocator {
          * the smallest allowable block is sizeof(T) + (2 * sizeof(int))
          * choose the first block that fits
          */
-        pointer allocate (size_type n) {
+        /*pointer allocate (size_type n) {
             // <your code>
+            int *sent_p = reinterpret_cast<int*>(&a[0]);
+            char *temp_a = a;
+            int num_bytes_allocating = n * sizeof(value_type);
+            int smalllest_block = sizeof(value_type) + (2 * sizeof(int));
+            int free_block_size;
+            pointer alloc_p;
+            //Get the pointer to the first free block
+            while(temp_a < (a + N))
+            {
+                if (*sent_p > 0)
+                {   
+                    // If we have enough space, that was asked for 
+                    if (*sent_p >= num_bytes_allocating)
+                    {   
+                        // check if left-over block is >= smallest allowable block is sizeof(T) + (2 * sizeof(int))
+                        if ((*sent_p - num_bytes_allocating) >= smalllest_block ) 
+                        {
+                            free_block_size = *sent_p;
+                            *sent_p = num_bytes_allocating * -1;
+                            alloc_p = (pointer) (sent_p + 1);
+                            temp_a += num_bytes_allocating + 4; 
+                            sent_p = (int *) temp_a;
+                            *sent_p = num_bytes_allocating * -1;
+
+                            sent_p += 1;
+                            *sent_p = free_block_size - num_bytes_allocating - 8;
+                            temp_a = (char *) sent_p;
+                            temp_a += *sent_p + 4;
+                            sent_p = (int *) temp_a;
+                            *sent_p = free_block_size - num_bytes_allocating - 8;
+
+                            return alloc_p;
+                        }
+                        else
+                        {
+                            // check if (*sent_p - num_bytes_allocating) == 0 then give it all
+                            free_block_size = *sent_p;
+                            *sent_p *= -1;
+                            alloc_p = (pointer) (sent_p + 1);
+                            temp_a += free_block_size + 4; 
+                            sent_p = (int *) temp_a;
+                            *sent_p *= -1;    
+                            
+                            return alloc_p;                       
+                        }
+                    }
+                    else
+                    {
+                        temp_a = temp_a + *sent_p + 8;
+                        sent_p = (int *) temp_a;
+                    }
+
+                }
+                else
+                {
+                    temp_a = temp_a + (*sent_p * -1) + 8;
+                    sent_p = (int *) temp_a;
+                }                
+                
+            }
+
             assert(valid());
-            return 0;}                   // replace!
+            return 0;}                   // replace!*/
 
         // ---------
         // construct

@@ -133,7 +133,7 @@ class Allocator {
          * the smallest allowable block is sizeof(T) + (2 * sizeof(int))
          * choose the first block that fits
          */
-        /*pointer allocate (size_type n) {
+        pointer allocate (size_type n) {
             // <your code>
             int *sent_p = reinterpret_cast<int*>(&a[0]);
             char *temp_a = a;
@@ -197,7 +197,7 @@ class Allocator {
             }
 
             assert(valid());
-            return 0;}                   // replace!*/
+            return 0;}                   // replace!
 
         // ---------
         // construct

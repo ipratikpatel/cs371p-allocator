@@ -109,7 +109,7 @@ class Allocator {
         Allocator () {
             // <your code>
             int *p = reinterpret_cast<int*>(&a[0]);
-            int num_free_bytes = N - 8;// this is where we did it
+            int num_free_bytes = N - 8;
             *p = num_free_bytes;
             p = (int * ) ( a + N - 4 );
             assert(p == (int *) (a + 4 + num_free_bytes)); 
@@ -166,6 +166,7 @@ class Allocator {
                             sent_p = (int *) temp_a;
                             *sent_p = free_block_size - num_bytes_allocating - 8;
 
+			    assert(valid());
                             return alloc_p;
                         }
                         else
@@ -177,7 +178,8 @@ class Allocator {
                             temp_a += free_block_size + 4; 
                             sent_p = (int *) temp_a;
                             *sent_p *= -1;    
-                            
+                       
+			    assert(valid());
                             return alloc_p;                       
                         }
                     }
@@ -196,10 +198,11 @@ class Allocator {
                 
             }
 
+	    std::bad_alloc exception;
+	    throw exception;
             std::cout << "No free space" << std::endl;
             exit(0);
 
-            assert(valid());
             return 0;}                   // replace!
 
         // ---------
@@ -241,6 +244,7 @@ class Allocator {
 	    assert(*block1 < 0);
 	    assert(*block2 < 0);
 
+	    //if pointer p is pointing to first block in allocate array
 	    if(block1 == reinterpret_cast<int*>(a)){
 	        adj_block1 = NULL;
 	    }
@@ -248,6 +252,7 @@ class Allocator {
 		adj_block1 = block1 - 1;
 	    }
 
+	    //if pointer p is pointing to last block in allocate array
 	    if(block2 + 1 == reinterpret_cast<int*>(a+N)){
 		adj_block2 = NULL;
 	    }
@@ -281,6 +286,8 @@ class Allocator {
 		rb = block2;
 		*rb = *lb;
 	    }
+
+	    assert(valid());
 	}
 
         // -------

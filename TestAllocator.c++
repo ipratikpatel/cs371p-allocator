@@ -108,13 +108,11 @@ TYPED_TEST(TestAllocator, Ten) {
 
     TYPED_TEST(TestAllocator, TestDeallocate) {
     typedef typename TestFixture::allocator_type  allocator_type;
-    typedef typename TestFixture::value_type      value_type;
     typedef typename TestFixture::difference_type difference_type;
     typedef typename TestFixture::pointer         pointer;
 
     allocator_type x;
     const difference_type s = 10;
-    const value_type      v = 2;
     const pointer         b = x.allocate(s);
     x.deallocate(b, s);
     
@@ -122,26 +120,20 @@ TYPED_TEST(TestAllocator, Ten) {
     x.deallocate(c, s);
     }
 
-/*
-Running main() from gtest_main.cc
-[==========] Running 8 tests from 4 test cases.
-[----------] Global test environment set-up.
-[----------] 2 tests from TestAllocator/0, where TypeParam = std::allocator<int>
-[ RUN      ] TestAllocator/0.One
-[       OK ] TestAllocator/0.One (10 ms)
-[ RUN      ] TestAllocator/0.Ten
-[       OK ] TestAllocator/0.Ten (3 ms)
-[----------] 2 tests from TestAllocator/0 (25 ms total)
+    TYPED_TEST(TestAllocator, TestDeallocate1){
+	typedef typename TestFixture::allocator_type  allocator_type;
+    	typedef typename TestFixture::value_type      value_type;
+   	typedef typename TestFixture::difference_type difference_type;
+    	typedef typename TestFixture::pointer         pointer;
 
-[----------] 2 tests from TestAllocator/1, where TypeParam = std::allocator<double>
-[ RUN      ] TestAllocator/1.One
-[       OK ] TestAllocator/1.One (3 ms)
-[ RUN      ] TestAllocator/1.Ten
-[       OK ] TestAllocator/1.Ten (3 ms)
-[----------] 2 tests from TestAllocator/1 (7 ms total)
+	allocator_type x;
+	const difference_type s = 10;
+	const pointer b = x.allocate(2);
+	const pointer c = x.allocate(3);
 
-[----------] 2 tests from TestAllocator/2, where TypeParam = Allocator<int, 100>
-[ RUN      ] TestAllocator/2.One
-
-
-*/
+	x.deallocate(b,2);
+	x.deallocate(c,3);
+	const pointer d = x.allocate(3);
+	assert(b==d);
+	x.deallocate(d,3);
+    }

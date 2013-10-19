@@ -1,42 +1,11 @@
 Running main() from gtest_main.cc
-[==========] Running 12 tests from 4 test cases.
+[==========] Running 16 tests from 4 test cases.
 [----------] Global test environment set-up.
-[----------] 3 tests from TestAllocator/0, where TypeParam = std::allocator<int>
+[----------] 4 tests from TestAllocator/0, where TypeParam = std::allocator<int>
 [ RUN      ] TestAllocator/0.One
 [       OK ] TestAllocator/0.One (10 ms)
 [ RUN      ] TestAllocator/0.Ten
 [       OK ] TestAllocator/0.Ten (3 ms)
 [ RUN      ] TestAllocator/0.TestDeallocate
 [       OK ] TestAllocator/0.TestDeallocate (2 ms)
-[----------] 3 tests from TestAllocator/0 (26 ms total)
-
-[----------] 3 tests from TestAllocator/1, where TypeParam = std::allocator<double>
-[ RUN      ] TestAllocator/1.One
-[       OK ] TestAllocator/1.One (4 ms)
-[ RUN      ] TestAllocator/1.Ten
-[       OK ] TestAllocator/1.Ten (3 ms)
-[ RUN      ] TestAllocator/1.TestDeallocate
-[       OK ] TestAllocator/1.TestDeallocate (2 ms)
-[----------] 3 tests from TestAllocator/1 (9 ms total)
-
-[----------] 3 tests from TestAllocator/2, where TypeParam = Allocator<int, 100>
-[ RUN      ] TestAllocator/2.One
-[       OK ] TestAllocator/2.One (5 ms)
-[ RUN      ] TestAllocator/2.Ten
-[       OK ] TestAllocator/2.Ten (3 ms)
-[ RUN      ] TestAllocator/2.TestDeallocate
-[       OK ] TestAllocator/2.TestDeallocate (2 ms)
-[----------] 3 tests from TestAllocator/2 (11 ms total)
-
-[----------] 3 tests from TestAllocator/3, where TypeParam = Allocator<double, 100>
-[ RUN      ] TestAllocator/3.One
-[       OK ] TestAllocator/3.One (6 ms)
-[ RUN      ] TestAllocator/3.Ten
-[       OK ] TestAllocator/3.Ten (4 ms)
-[ RUN      ] TestAllocator/3.TestDeallocate
-[       OK ] TestAllocator/3.TestDeallocate (2 ms)
-[----------] 3 tests from TestAllocator/3 (12 ms total)
-
-[----------] Global test environment tear-down
-[==========] 12 tests from 4 test cases ran. (82 ms total)
-[  PASSED  ] 12 tests.
+[ RUN      ] TestAllocator/0.TestDeallocate1

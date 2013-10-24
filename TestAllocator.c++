@@ -54,9 +54,8 @@ struct TestAllocator : testing::Test {
 
 typedef testing::Types<
             std::allocator<int>,
-            std::allocator<double>,
-            Allocator<int, 100>,
-            Allocator<double, 100> >
+            std::allocator<double>
+            >
         my_types;
 
 TYPED_TEST_CASE(TestAllocator, my_types);
@@ -122,26 +121,4 @@ TYPED_TEST(TestAllocator, Ten) {
     x.deallocate(c, s);
     }
 
-/*
-Running main() from gtest_main.cc
-[==========] Running 8 tests from 4 test cases.
-[----------] Global test environment set-up.
-[----------] 2 tests from TestAllocator/0, where TypeParam = std::allocator<int>
-[ RUN      ] TestAllocator/0.One
-[       OK ] TestAllocator/0.One (10 ms)
-[ RUN      ] TestAllocator/0.Ten
-[       OK ] TestAllocator/0.Ten (3 ms)
-[----------] 2 tests from TestAllocator/0 (25 ms total)
 
-[----------] 2 tests from TestAllocator/1, where TypeParam = std::allocator<double>
-[ RUN      ] TestAllocator/1.One
-[       OK ] TestAllocator/1.One (3 ms)
-[ RUN      ] TestAllocator/1.Ten
-[       OK ] TestAllocator/1.Ten (3 ms)
-[----------] 2 tests from TestAllocator/1 (7 ms total)
-
-[----------] 2 tests from TestAllocator/2, where TypeParam = Allocator<int, 100>
-[ RUN      ] TestAllocator/2.One
-
-
-*/

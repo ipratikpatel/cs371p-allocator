@@ -66,10 +66,10 @@ class Allocator {
         /**
          * O(1) in space
          * O(n) in time
-         * <your documentation>
+         * @return returns true if array a is valid, false otherwise
+         * Checks if the space which is being allocated is valid(Sentinals are in correct order and place) or not
          */
         bool valid () const {
-            // <your code>
             const int *p = reinterpret_cast<const int*>(&a[0]);
             int sentinal_a = 0;
             int sentinal_b = 0;
@@ -96,6 +96,19 @@ class Allocator {
 
             return true;}
 
+        /**
+         * O(1) in space
+         * O(1) in time
+         * @param i is an integer which is a position in an array
+         * @return reference to the sentinal at the given position
+         * Reads the position in an array and returns a referance 
+         * to sentinal at that position and is a read-write method
+         */
+         int& view (int i) {
+            return *reinterpret_cast<int*>(&a[i]);}
+
+
+
     public:
         // ------------
         // constructors
@@ -104,10 +117,9 @@ class Allocator {
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * Default constructor for allocator class
          */
         Allocator () {
-            // <your code>
             int *p = reinterpret_cast<int*>(&a[0]);
             int num_free_bytes = N - 8;
             *p = num_free_bytes;
@@ -128,13 +140,13 @@ class Allocator {
         /**
          * O(1) in space
          * O(n) in time
-         * <your documentation>
+         * @param n is of type size_type. n is number of value_type object being allocated
+         * @return pointer to the begining of the allocated block
          * after allocation there must be enough space left for a valid block
          * the smallest allowable block is sizeof(T) + (2 * sizeof(int))
          * choose the first block that fits
          */
         pointer allocate (size_type n) {
-            // <your code>
             int *sent_p = reinterpret_cast<int*>(&a[0]);
             char *temp_a = a;
             int num_bytes_allocating = n * sizeof(value_type);
@@ -212,7 +224,8 @@ class Allocator {
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * @param1 p is a pointer where a value_type is being constructed
+         * @param2 v is the value of the value type 
          */
         void construct (pointer p, const_reference v) {
             new (p) T(v);                               // this is correct and exempt
@@ -225,70 +238,73 @@ class Allocator {
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * @param1 p is of type pointer, which is a pointer to the beginning of the block being deallocated
+         * @param2 size_type tells us how many objects of value_type being deallocated
          * after deallocation adjacent free blocks must be coalesced
          */
         void deallocate (pointer p, size_type) {
-            // <your code>
+            if(p == NULL)
+                std::exception exception;
+                   
             assert(valid());
-	    int* int_p = reinterpret_cast<int*>(p);
+    	    int* int_p = reinterpret_cast<int*>(p);
 
-	    int* block1 = int_p - 1;
-	    char* temp_block1 = reinterpret_cast<char*>(int_p);
-	    int* block2 = reinterpret_cast<int*>(temp_block1 + (*block1 * -1));
-	    int* adj_block1;
-	    int* adj_block2;
-	    int* lb;
-	    int* rb;
+    	    int* block1 = int_p - 1;
+    	    char* temp_block1 = reinterpret_cast<char*>(int_p);
+    	    int* block2 = reinterpret_cast<int*>(temp_block1 + (*block1 * -1));
+    	    int* adj_block1;
+    	    int* adj_block2;
+    	    int* lb;
+    	    int* rb;
 
-	    assert(*block1 < 0);
-	    assert(*block2 < 0);
+    	    assert(*block1 < 0);
+    	    assert(*block2 < 0);
 
-	    //if pointer p is pointing to first block in allocate array
-	    if(block1 == reinterpret_cast<int*>(a)){
-	        adj_block1 = NULL;
-	    }
-	    else{
-		adj_block1 = block1 - 1;
-	    }
+    	    //if pointer p is pointing to first block in allocate array
+    	    if(block1 == reinterpret_cast<int*>(a)){
+    	        adj_block1 = NULL;
+    	    }
+    	    else{
+    		adj_block1 = block1 - 1;
+    	    }
 
-	    //if pointer p is pointing to last block in allocate array
-	    if(block2 + 1 == reinterpret_cast<int*>(a+N)){
-		adj_block2 = NULL;
-	    }
-	    else{
-		adj_block2 = block2 + 1;
-	    }
+    	    //if pointer p is pointing to last block in allocate array
+    	    if(block2 + 1 == reinterpret_cast<int*>(a+N)){
+    		adj_block2 = NULL;
+    	    }
+    	    else{
+    		adj_block2 = block2 + 1;
+    	    }
 
-	    if(adj_block1 != NULL && *adj_block1 > 0){
-		int bytes_adj_block1 = *adj_block1;
-		char* temp_adj_block1 = reinterpret_cast<char*>(adj_block1);
-		lb = reinterpret_cast<int*>(temp_adj_block1 - bytes_adj_block1 - 4);
-		*lb = (-1 * *block1) + *adj_block1 + 8;
-		*block1 = 0;
-		*adj_block1 = 0;
-	    }
-	    else{
-		lb = block1;
-		*lb = *block1 * -1;
-	    }
+    	    if(adj_block1 != NULL && *adj_block1 > 0){
+    		int bytes_adj_block1 = *adj_block1;
+    		char* temp_adj_block1 = reinterpret_cast<char*>(adj_block1);
+    		lb = reinterpret_cast<int*>(temp_adj_block1 - bytes_adj_block1 - 4);
+    		*lb = (-1 * *block1) + *adj_block1 + 8;
+    		*block1 = 0;
+    		*adj_block1 = 0;
+    	    }
+    	    else{
+    		lb = block1;
+    		*lb = *block1 * -1;
+    	    }
 
-	    if(adj_block2 != NULL && *adj_block2 > 0){
-		int bytes_adj_block2 = *adj_block2;
-		char* temp_adj_block2 = reinterpret_cast<char*>(adj_block2);
-		rb = reinterpret_cast<int*>(temp_adj_block2 + bytes_adj_block2 + 4);
-		*rb = bytes_adj_block2 + *lb + 8;
-		*lb = *rb;
-		*block2 = 0;
-		*adj_block2 = 0;
-	    }
-	    else{
-		rb = block2;
-		*rb = *lb;
-	    }
+    	    if(adj_block2 != NULL && *adj_block2 > 0){
+    		int bytes_adj_block2 = *adj_block2;
+    		char* temp_adj_block2 = reinterpret_cast<char*>(adj_block2);
+    		rb = reinterpret_cast<int*>(temp_adj_block2 + bytes_adj_block2 + 4);
+    		*rb = bytes_adj_block2 + *lb + 8;
+    		*lb = *rb;
+    		*block2 = 0;
+    		*adj_block2 = 0;
+    	    }
+    	    else{
+    		rb = block2;
+    		*rb = *lb;
+    	    }
 
-	    assert(valid());
-	}
+    	    assert(valid());
+	   }
 
         // -------
         // destroy
@@ -297,11 +313,24 @@ class Allocator {
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * @param p is a pointer to the object being destroyed
+         * calls a deallocate methos of the value_type object
          */
         void destroy (pointer p) {
             p->~T();               // this is correct
-            assert(valid());}};
+            assert(valid());}
+
+        /**
+         * O(1) in space
+         * O(1) in time
+         * @param i is an integer which is a position in an array
+         * @return reference to the sentinal at the given position
+         * Reads the position in an array and returns a referance 
+         * to sentinal at that position and is a read only method
+         */
+        const int& view (int i) const {
+            return *reinterpret_cast<const int*>(&a[i]);}
+        };
 
 #endif // Allocator_h
 

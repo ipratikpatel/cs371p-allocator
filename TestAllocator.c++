@@ -107,13 +107,11 @@ TYPED_TEST(TestAllocator, Ten) {
 
     TYPED_TEST(TestAllocator, TestDeallocate) {
     typedef typename TestFixture::allocator_type  allocator_type;
-    typedef typename TestFixture::value_type      value_type;
     typedef typename TestFixture::difference_type difference_type;
     typedef typename TestFixture::pointer         pointer;
 
     allocator_type x;
     const difference_type s = 10;
-    const value_type      v = 2;
     const pointer         b = x.allocate(s);
     x.deallocate(b, s);
     
@@ -122,3 +120,20 @@ TYPED_TEST(TestAllocator, Ten) {
     }
 
 
+    TYPED_TEST(TestAllocator, TestDeallocate1){
+	typedef typename TestFixture::allocator_type  allocator_type;
+    	typedef typename TestFixture::value_type      value_type;
+   	typedef typename TestFixture::difference_type difference_type;
+    	typedef typename TestFixture::pointer         pointer;
+
+	allocator_type x;
+	const difference_type s = 10;
+	const pointer b = x.allocate(2);
+	const pointer c = x.allocate(3);
+
+	x.deallocate(b,2);
+	x.deallocate(c,3);
+	const pointer d = x.allocate(3);
+	assert(b==d);
+	x.deallocate(d,3);
+    }

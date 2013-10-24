@@ -1,0 +1,11 @@
+Running main() from gtest_main.cc
+[==========] Running 16 tests from 4 test cases.
+[----------] Global test environment set-up.
+[----------] 4 tests from TestAllocator/0, where TypeParam = std::allocator<int>
+[ RUN      ] TestAllocator/0.One
+[       OK ] TestAllocator/0.One (10 ms)
+[ RUN      ] TestAllocator/0.Ten
+[       OK ] TestAllocator/0.Ten (3 ms)
+[ RUN      ] TestAllocator/0.TestDeallocate
+[       OK ] TestAllocator/0.TestDeallocate (2 ms)
+[ RUN      ] TestAllocator/0.TestDeallocate1
